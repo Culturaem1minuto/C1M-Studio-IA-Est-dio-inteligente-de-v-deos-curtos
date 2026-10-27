@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111318" />
+  <meta name="description" content="C1M Studio IA — transforme briefings, imagens e ideias em projetos de vídeos curtos para Reels, TikTok e YouTube Shorts." />
+  <title>C1M Studio IA — Estúdio de vídeos curtos</title>
+  <style>
+    :root {
+      --bg: #101116;
+      --panel: #181a22;
+      --panel-2: #20232d;
+      --line: #303440;
+      --text: #f4f5f7;
+      --muted: #a3a8b7;
+      --red: #f04438;
+      --orange: #ff8a36;
+      --green: #48d6a0;
+      --radius: 18px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 15% -10%, rgba(240,68,56,.16), transparent 38%), var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .app { max-width: 1500px; margin: auto; padding: 22px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 8px 0 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--red), var(--orange)); font-weight: 900; letter-spacing: -2px;
+      box-shadow: 0 8px 28px #f0443830;
+    }
+    .brand h1 { margin: 0; font-size: 19px; letter-spacing: -.5px; }
+    .brand p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .pill { border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 8px 12px; font-size: 12px; }
+    .button { border: 1px solid var(--line); background: var(--panel-2); color: var(--text); padding: 11px 15px; border-radius: 11px; font-weight: 650; transition: .2s; }
+    .button:hover { transform: translateY(-1px); border-color: #626879; }
+    .button.primary { background: linear-gradient(120deg, var(--red), #ff6846); border-color: transparent; color: white; }
+    .button.ghost { background: transparent; }
+    .hero { display: grid; grid-template-columns: 1.35fr .65fr; gap: 18px; margin-bottom: 20px; }
+    .hero-copy, .hero-side { border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(135deg, #1c1e27, #15161c); padding: 25px; }
+    .eyebrow { color: #ff927e; text-transform: uppercase; letter-spacing: 1.7px; font-size: 10px; font-weight: 800; }
+    .hero h2 { font-size: clamp(28px, 4vw, 45px); line-height: 1.05; letter-spacing: -1.8px; margin: 13px 0; max-width: 700px; }
+    .hero h2 span { color: var(--orange); }
+    .hero p { color: var(--muted); line-height: 1.65; max-width: 680px; margin-bottom: 20px; }
+    .hero-side { display: flex; flex-direction: column; justify-content: space-between; gap: 20px; }
+    .stat-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .stat-row:last-child { border-bottom: 0; }
+    .stat-row strong { font-size: 14px; }
+    .stat-row span { color: var(--muted); font-size: 12px; }
+    .workspace { display: grid; grid-template-columns: minmax(280px, .85fr) minmax(360px, 1.15fr); gap: 18px; align-items: start; }
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 17px 19px; border-bottom: 1px solid var(--line); }
+    .panel-head h3 { margin: 0; font-size: 15px; }
+    .panel-body { padding: 19px; }
+    .step-label { color: var(--orange); font-size: 10px; text-transform: uppercase; letter-spacing: 1.4px; font-weight: 800; margin-bottom: 8px; }
+    .field { margin-bottom: 16px; }
+    label { display: block; color: #dfe1e8; font-size: 12px; font-weight: 650; margin-bottom: 7px; }
+    input, select, textarea {
+      display: block; width: 100%; color: var(--text); background: #11131a; border: 1px solid #343845;
+      border-radius: 10px; padding: 11px 12px; outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--orange); box-shadow: 0 0 0 3px #ff8a3618; }
+    textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
+    input::placeholder, textarea::placeholder { color: #777d8d; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .upload {
+      display: block; border: 1px dashed #505665; background: #13151c; border-radius: 12px; padding: 16px;
+      text-align: center; color: var(--muted); font-size: 12px; line-height: 1.6; cursor: pointer;
+    }
+    .upload b { display: block; color: var(--text); font-size: 13px; margin-bottom: 4px; }
+    .upload input { display: none; }
+    .media-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+    .media-item { position: relative; aspect-ratio: 1; background: #0c0d11; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+    .media-item img, .media-item video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .media-item .media-name { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 5px 5px; background: linear-gradient(transparent, #000d); font-size: 9px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .media-item .remove { position: absolute; right: 4px; top: 4px; border: 0; background: #000b; color: white; border-radius: 50%; width: 22px; height: 22px; }
+    .form-actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 18px; }
+    .output-panel { margin-top: 18px; }
+    .output-empty { min-height: 200px; display: grid; place-items: center; text-align: center; color: var(--muted); padding: 28px; }
+    .output-empty .big-icon { font-size: 34px; margin-bottom: 12px; }
+    .output { display: none; }
+    .project-summary { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .tag { font-size: 10px; border: 1px solid #3b3e4a; background: #20222b; border-radius: 999px; padding: 6px 9px; color: #d5d7df; }
+    .scene-list { display: grid; gap: 12px; }
+    .scene { border: 1px solid var(--line); border-radius: 13px; overflow: hidden; background: #14161d; }
+    .scene-top { display: flex; justify-content: space-between; gap: 12px; padding: 13px 14px; border-bottom: 1px solid var(--line); align-items: center; }
+    .scene-number { color: var(--orange); font-size: 10px; font-weight: 850; letter-spacing: 1px; }
+    .scene-top h4 { margin: 3px 0 0; font-size: 14px; }
+    .duration { color: var(--muted); font-size: 11px; white-space: nowrap; }
+    .scene-content { display: grid; grid-template-columns: 105px 1fr; gap: 14px; padding: 14px; }
+    .scene-visual { background: #242733; border-radius: 8px; aspect-ratio: 9/12; display: grid; place-items: center; color: #aeb3c1; text-align: center; font-size: 11px; padding: 8px; overflow: hidden; }
+    .scene-visual img, .scene-visual video { width: 100%; height: 100%; object-fit: cover; }
+    .scene-content p { font-size: 12px; line-height: 1.55; color: #c3c6d0; margin: 0 0 9px; }
+    .scene-content p b { color: #f3f4f7; }
+    .scene-controls { display: flex; gap: 7px; flex-wrap: wrap; padding: 0 14px 14px; }
+    .scene-controls button { font-size: 11px; padding: 7px 9px; }
+    .timeline { margin-top: 18px; padding: 16px; background: #11131a; border: 1px solid var(--line); border-radius: 13px; }
+    .timeline-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 12px; font-size: 12px; }
+    .timeline-track { display: flex; gap: 4px; min-height: 42px; }
+    .clip { display: grid; place-items: center; min-width: 0; padding: 5px; border-radius: 6px; background: linear-gradient(135deg, #a62f2b, #e66a35); color: white; font-size: 10px; text-align: center; overflow: hidden; }
+    .audio-track { height: 18px; margin-top: 6px; border-radius: 4px; background: repeating-linear-gradient(90deg, #235e54 0 4px, #2c8b77 4px 7px, transparent 7px 10px); opacity: .8; }
+    .publish-box { background: #13151c; border: 1px solid var(--line); border-radius: 12px; padding: 15px; margin-top: 15px; }
+    .publish-box h4 { margin: 0 0 10px; font-size: 13px; }
+    .publish-box p { white-space: pre-wrap; color: #c5c8d1; font-size: 12px; line-height: 1.6; }
+    .small-note { font-size: 11px; line-height: 1.6; color: var(--muted); }
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 12px 16px; background: #272b36; color: white; border: 1px solid #444958; border-radius: 12px; box-shadow: 0 8px 30px #0007; z-index: 10; display: none; max-width: calc(100vw - 30px); font-size: 13px; }
+    footer { text-align: center; padding: 28px 0 10px; color: #747989; font-size: 11px; }
+    @media (max-width: 900px) { .hero, .workspace { grid-template-columns: 1fr; } .hero-side { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; } }
+    @media (max-width: 560px) {
+      .app { padding: 13px; } header { align-items: flex-start; flex-direction: column; } .hero-copy, .hero-side { padding: 18px; }
+      .hero-side { display: block; } .two { grid-template-columns: 1fr; gap: 0; } .panel-body { padding: 14px; }
+      .scene-content { grid-template-columns: 82px 1fr; gap: 10px; } .scene-content p { font-size: 11px; }
+      .form-actions .button { flex: 1; } .header-actions { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">C1M</div>
+        <div>
+          <h1>C1M Studio <span style="color:var(--orange)">IA</span></h1>
+          <p>Estúdio inteligente de vídeos curtos</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="pill">● Protótipo local</span>
+        <button class="button ghost" id="resetBtn" type="button">Novo projeto</button>
+        <button class="button" id="exportJsonBtn" type="button">Exportar projeto JSON</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Da pauta ao vídeo</div>
+        <h2>Transforme ideias em <span>histórias que se movem.</span></h2>
+        <p>Organize o briefing, reúna seus arquivos e construa vídeos verticais com roteiro cena a cena. Um espaço de trabalho pensado para jornalismo cultural, eventos, marcas e narrativas autorais.</p>
+        <button class="button primary" id="focusBriefBtn" type="button">＋ Criar novo vídeo</button>
+      </div>
+      <div class="hero-side">
+        <div>
+          <div class="eyebrow">Seu fluxo de produção</div>
+          <div class="stat-row"><div><strong>01 · Briefing</strong><br><span>Objetivo e público</span></div><span>Entrada</span></div>
+          <div class="stat-row"><div><strong>02 · Biblioteca</strong><br><span>Fotos, vídeos e áudio</span></div><span>Mídia</span></div>
+          <div class="stat-row"><div><strong>03 · Cenas</strong><br><span>Roteiro e montagem</span></div><span>Edição</span></div>
+          <div class="stat-row"><div><strong>04 · Entrega</strong><br><span>Projeto e publicação</span></div><span>Saída</span></div>
+        </div>
+        <p class="small-note">Este protótipo organiza o projeto no navegador. A geração automática de roteiro por IA e a renderização MP4 exigem integrações adicionais.</p>
+      </div>
+    </section>
+
+    <main class="workspace">
+      <section class="panel" id="briefPanel">
+        <div class="panel-head">
+          <h3>01 / Briefing do vídeo</h3>
+          <span class="tag">Novo projeto</span>
+        </div>
+        <div class="panel-body">
+          <div class="step-label">Defina a história</div>
+          <form id="briefForm">
+            <div class="field">
+              <label for="projectTitle">Nome do projeto *</label>
+              <input id="projectTitle" required placeholder="Ex.: Uma cidade em movimento" />
+            </div>
+            <div class="field">
+              <label for="topic">Briefing / informações da pauta *</label>
+              <textarea id="topic" required placeholder="Qual é a história? Inclua informações, datas, nomes, local, contexto, mensagens obrigatórias e fontes disponíveis."></textarea>
+            </div>
+            <div class="two">
+              <div class="field">
+                <label for="goal">Objetivo</label>
+                <select id="goal">
+                  <option>Jornalismo cultural</option>
+                  <option>Divulgação de evento</option>
+                  <option>Institucional / comercial</option>
+                  <option>Educativo / explicativo</option>
+                  <option>Narrativa autoral</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="platform">Plataforma</label>
+                <select id="platform">
+                  <option>Instagram Reels</option>
+                  <option>TikTok</option>
+                  <option>YouTube Shorts</option>
+                  <option>Reels + TikTok + Shorts</option>
+                </select>
+              </div>
+            </div>
+            <div class="two">
+              <div class="field">
+                <label for="duration">Duração</label>
+                <select id="duration">
+                  <option value="15">15 segundos</option>
+                  <option value="30">30 segundos</option>
+                  <option value="60" selected>60 segundos</option>
+                  <option value="90">90 segundos</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="style">Direção estética</label>
+                <select id="style">
+                  <option>Jornalístico e cinematográfico</option>
+                  <option>Documental e sensível</option>
+                  <option>Dinâmico e acelerado</option>
+                  <option>Gráfico e tipográfico</option>
+                  <option>Comercial e promocional</option>
+                </select>
+              </div>
+            </div>
+            <div class="two">
+              <div class="field">
+                <label for="voice">Áudio / narrativa</label>
+                <select id="voice">
+                  <option>Locução + legendas</option>
+                  <option>Som original + legendas</option>
+                  <option>Música + textos na tela</option>
+                  <option>Entrevista e som ambiente</option>
+                  <option>IA propõe a melhor solução</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="brand">Marca / identidade visual</label>
+                <input id="brand" value="Cultura em 1 Minuto" placeholder="Nome da marca" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="cta">Chamada para ação (opcional)</label>
+              <input id="cta" placeholder="Ex.: Confira a programação completa" />
+            </div>
+            <div class="field">
+              <label>02 / Biblioteca de mídia</label>
+              <label class="upload" for="mediaFiles">
+                <b>＋ Adicionar fotos, vídeos ou áudios</b>
+                Clique para selecionar arquivos do seu dispositivo.<br />
+                Os arquivos ficam neste navegador enquanto a página estiver aberta.
+                <input id="mediaFiles" type="file" multiple accept="image/*,video/*,audio/*" />
+              </label>
+              <div id="mediaList" class="media-list"></div>
+            </div>
+            <div class="form-actions">
+              <button class="button primary" type="submit">✦ Montar roteiro de cenas</button>
+              <button class="button" id="saveDraftBtn" type="button">Salvar rascunho</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>03 / Roteiro e montagem</h3>
+            <span class="tag" id="sceneCount">0 cenas</span>
+          </div>
+          <div id="emptyState" class="output-empty">
+            <div><div class="big-icon">▧</div><strong>Seu próximo vídeo começa aqui</strong><p>Preencha o briefing e monte uma primeira estrutura de cenas editável.</p></div>
+          </div>
+          <div id="output" class="panel-body output">
+            <div id="projectSummary" class="project-summary"></div>
+            <div id="sceneList" class="scene-list"></div>
+            <div class="timeline">
+              <div class="timeline-head"><strong>Timeline simplificada</strong><span id="timelineDuration">00:00</span></div>
+              <div class="timeline-track" id="timelineTrack"></div>
+              <div class="audio-track" title="Faixa de áudio ilustrativa"></div>
+              <p class="small-note">A timeline é uma representação visual do roteiro, não uma linha do tempo de edição de vídeo real.</p>
+            </div>
+            <div class="publish-box">
+              <h4>Legenda sugerida para publicação</h4>
+              <p id="captionText"></p>
+              <button class="button" id="copyCaptionBtn" type="button">Copiar legenda</button>
+            </div>
+            <div class="form-actions">
+              <button class="button" id="addSceneBtn" type="button">＋ Adicionar cena</button>
+              <button class="button" id="downloadBriefBtn" type="button">Baixar roteiro .txt</button>
+              <button class="button primary" id="exportProjectBtn" type="button">Exportar projeto JSON</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel output-panel">
+          <div class="panel-head"><h3>04 / Checklist de entrega</h3><span class="tag">Revisão humana</span></div>
+          <div class="panel-body">
+            <p class="small-note">Antes de publicar, confira as informações factuais, os direitos de uso das imagens e músicas, os créditos, a legibilidade das legendas, o áudio e o enquadramento vertical.</p>
+            <label style="display:flex;gap:9px;align-items:center;font-weight:500"><input type="checkbox" style="width:auto" /> Informações e nomes conferidos</label>
+            <label style="display:flex;gap:9px;align-items:center;font-weight:500;margin-top:10px"><input type="checkbox" style="width:auto" /> Imagens, vídeos e trilha autorizados</label>
+            <label style="display:flex;gap:9px;align-items:center;font-weight:500;margin-top:10px"><input type="checkbox" style="width:auto" /> Legendas, áudio e créditos revisados</label>
+            <label style="display:flex;gap:9px;align-items:center;font-weight:500;margin-top:10px"><input type="checkbox" style="width:auto" /> Exportação final conferida</label>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>C1M Studio IA · Protótipo de interface · Produção audiovisual multiplataforma</footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      let media = [];
+      let scenes = [];
+      let project = null;
+      let toastTimer;
+
+      function notify(message) {
+        const el = $('toast');
+        el.textContent = message;
+        el.style.display = 'block';
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.style.display = 'none', 2800);
+      }
+      function esc(value) {
+        return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      }
+      function formatTime(seconds) {
+        const n = Math.max(0, Math.round(Number(seconds) || 0));
+        return `00:${String(n).padStart(2, '0')}`;
+      }
+      function getFormData() {
+        return {
+          title: $('projectTitle').value.trim(),
+          briefing: $('topic').value.trim(),
+          goal: $('goal').value,
+          platform: $('platform').value,
+          duration: Number($('duration').value),
+          style: $('style').value,
+          audio: $('voice').value,
+          brand: $('brand').value.trim(),
+          cta: $('cta').value.trim(),
+          aspectRatio: '9:16',
+          resolution: '1080x1920',
+          updatedAt: new Date().toISOString()
+        };
+      }
+      function renderMedia() {
+        const list = $('mediaList');
+        list.innerHTML = '';
+        media.forEach((item, index) => {
+          const el = document.createElement('div');
+          el.className = 'media-item';
+          let visual = '';
+          if (item.type.startsWith('image/')) visual = `<img src="${item.url}" alt="${esc(item.name)}">`;
+          else if (item.type.startsWith('video/')) visual = `<video src="${item.url}" muted playsinline></video>`;
+          else visual = `<div style="height:100%;display:grid;place-items:center;font-size:25px">♫</div>`;
+          el.innerHTML = `${visual}<button class="remove" type="button" aria-label="Remover arquivo">×</button><div class="media-name">${esc(item.name)}</div>`;
+          el.querySelector('.remove').addEventListener('click', () => {
+            URL.revokeObjectURL(item.url);
+            media.splice(index, 1);
+            renderMedia();
+          });
+          list.appendChild(el);
+        });
+      }
+      $('mediaFiles').addEventListener('change', (event) => {
+        const files = Array.from(event.target.files || []);
+        files.forEach(file => media.push({ name: file.name, type: file.type || 'application/octet-stream', size: file.size, url: URL.createObjectURL(file) }));
+        renderMedia();
+        if (files.length) notify(`${files.length} arquivo(s) adicionado(s) à biblioteca.`);
+        event.target.value = '';
+      });
+
+      function makeScenes(data) {
+        const total = data.duration;
+        const count = total <= 15 ? 3 : total <= 30 ? 4 : total <= 60 ? 5 : 6;
+        const base = Math.floor(total / count);
+        const remainder = total - base * count;
+        const beats = [
+          { title: 'O gancho', role: 'Prender a atenção', direction: 'Abra com a imagem mais expressiva disponível ou um detalhe que desperte curiosidade.', screen: 'Uma pergunta ou frase curta que apresente a tensão central.', voice: 'Apresente a pauta de forma direta, sem exageros.' },
+          { title: 'O contexto', role: 'Situar a história', direction: 'Mostre o lugar, a pessoa, a obra ou a situação que ajuda o público a entender o tema.', screen: 'Identificação essencial: quem, o quê ou onde.', voice: 'Explique o contexto com base nas informações do briefing.' },
+          { title: 'O detalhe', role: 'Aprofundar', direction: 'Use um plano de detalhe, uma segunda imagem ou um trecho de vídeo para acrescentar informação.', screen: 'Uma informação concreta do material recebido.', voice: 'Desenvolva o ponto principal sem repetir a abertura.' },
+          { title: 'O que está em jogo', role: 'Dar significado', direction: 'Escolha a imagem que melhor revele impacto, contraste, processo ou experiência humana.', screen: 'A ideia central em uma frase legível.', voice: 'Conecte os fatos ao significado da pauta, sem inventar dados.' },
+          { title: 'O fechamento', role: 'Concluir e orientar', direction: 'Encerre com uma imagem que permaneça na memória e uma conclusão coerente.', screen: data.cta || 'Uma frase final que retome a ideia do vídeo.', voice: data.cta ? `Finalize com a chamada: ${data.cta}` : 'Conclua a narrativa e indique o próximo passo, se houver.' },
+          { title: 'Serviço e créditos', role: 'Informar', direction: 'Inclua serviço, data, local, créditos ou fonte quando forem necessários e estiverem confirmados.', screen: 'Informações práticas e créditos confirmados.', voice: 'Locução opcional; priorize a legibilidade das informações.' }
+        ];
+        return Array.from({ length: count }, (_, i) => {
+          const beat = beats[i] || beats[beats.length - 1];
+          const file = media[i % Math.max(media.length, 1)];
+          return {
+            id: `scene-${Date.now()}-${i}`,
+            title: beat.title,
+            role: beat.role,
+            duration: base + (i < remainder ? 1 : 0),
+            direction: beat.direction,
+            screen: beat.screen,
+            voice: beat.voice,
+            mediaName: file ? file.name : '',
+            mediaUrl: file ? file.url : '',
+            mediaType: file ? file.type : '',
+            transition: i === 0 ? 'Abertura direta' : (i === count - 1 ? 'Encerramento suave' : 'Corte seco'),
+            notes: ''
+          };
+        });
+      }
+      function renderScenes() {
+        $('sceneCount').textContent = `${scenes.length} ${scenes.length === 1 ? 'cena' : 'cenas'}`;
+        $('sceneList').innerHTML = '';
+        $('timelineTrack').innerHTML = '';
+        let total = 0;
+        scenes.forEach((scene, index) => {
+          total += Number(scene.duration) || 0;
+          const card = document.createElement('article');
+          card.className = 'scene';
+          const visual = scene.mediaUrl
+            ? (scene.mediaType.startsWith('image/') ? `<img src="${scene.mediaUrl}" alt="">` : scene.mediaType.startsWith('video/') ? `<video src="${scene.mediaUrl}" muted playsinline></video>` : '♫ Áudio')
+            : 'Adicionar imagem ou vídeo';
+          card.innerHTML = `
+            <div class="scene-top">
+              <div><div class="scene-number">CENA ${String(index + 1).padStart(2, '0')}</div><h4>${esc(scene.title)}</h4></div>
+              <div class="duration"><input aria-label="Duração em segundos" data-field="duration" type="number" min="1" max="300" value="${esc(scene.duration)}" style="width:76px;padding:7px"> seg.</div>
+            </div>
+            <div class="scene-content">
+              <div class="scene-visual">${visual}</div>
+              <div>
+                <p><b>Função:</b> ${esc(scene.role)}</p>
+                <p><b>Direção visual:</b> ${esc(scene.direction)}</p>
+                <div class="field"><label>Texto na tela</label><textarea data-field="screen" rows="2" style="min-height:60px">${esc(scene.screen)}</textarea></div>
+                <div class="field"><label>Locução / fala</label><textarea data-field="voice" rows="2" style="min-height:60px">${esc(scene.voice)}</textarea></div>
+                <div class="field"><label>Transição</label><select data-field="transition">
+                  ${['Abertura direta','Corte seco','Dissolução','Deslize','Zoom','Encerramento suave'].map(v => `<option ${scene.transition===v?'selected':''}>${v}</option>`).join('')}
+                </select></div>
+                <p><b>Arquivo:</b> ${esc(scene.mediaName || 'Nenhum arquivo associado')}</p>
+              </div>
+            </div>
+            <div class="scene-controls">
+              <button class="button" data-action="media">Associar mídia</button>
+              <button class="button" data-action="up" ${index===0?'disabled':''}>↑ Subir</button>
+              <button class="button" data-action="down" ${index===scenes.length-1?'disabled':''}>↓ Descer</button>
+              <button class="button" data-action="remove">Excluir cena</button>
+            </div>`;
+          card.querySelectorAll('[data-field]').forEach(input => {
+            input.addEventListener('change', () => {
+              const field = input.dataset.field;
+              scene[field] = field === 'duration' ? Math.max(1, Number(input.value) || 1) : input.value;
+              renderTimeline();
+            });
+          });
+          card.querySelector('[data-action="media"]').addEventListener('click', () => {
+            if (!media.length) { notify('Adicione arquivos na biblioteca primeiro.'); return; }
+            const choices = media.map((m, i) => `${i + 1}. ${m.name}`).join('\n');
+            const answer = prompt(`Escolha o número do arquivo para esta cena:\n${choices}`, '1');
+            const n = Number(answer) - 1;
+            if (answer !== null && media[n]) {
+              scene.mediaName = media[n].name; scene.mediaUrl = media[n].url; scene.mediaType = media[n].type; renderScenes();
+            }
+          });
+          card.querySelector('[data-action="up"]').addEventListener('click', () => { if (index > 0) { [scenes[index-1], scenes[index]] = [scenes[index], scenes[index-1]]; renderScenes(); } });
+          card.querySelector('[data-action="down"]').addEventListener('click', () => { if (index < scenes.length - 1) { [scenes[index+1], scenes[index]] = [scenes[index], scenes[index+1]]; renderScenes(); } });
+          card.querySelector('[data-action="remove"]').addEventListener('click', () => { scenes.splice(index, 1); renderScenes(); });
+          $('sceneList').appendChild(card);
+
+          const clip = document.createElement('div');
+          clip.className = 'clip';
+          clip.style.flex = String(Math.max(1, Number(scene.duration) || 1));
+          clip.title = `${scene.title}: ${scene.duration}s`;
+          clip.textContent = `C${index + 1} · ${scene.duration}s`;
+          $('timelineTrack').appendChild(clip);
+        });
+        $('timelineDuration').textContent = formatTime(total);
+      }
+      function renderTimeline() {
+        let total = 0;
+        scenes.forEach((s, i) => {
+          total += Number(s.duration) || 0;
+          const clip = $('timelineTrack').children[i];
+          if (clip) { clip.style.flex = String(Math.max(1, Number(s.duration) || 1)); clip.textContent = `C${i + 1} · ${s.duration}s`; clip.title = `${s.title}: ${s.duration}s`; }
+        });
+        $('timelineDuration').textContent = formatTime(total);
+        $('sceneCount').textContent = `${scenes.length} ${scenes.length === 1 ? 'cena' : 'cenas'}`;
+      }
+      function caption() {
+        if (!project) return '';
+        const base = `${project.title}\n\n${project.briefing.slice(0, 360)}${project.briefing.length > 360 ? '…' : ''}`;
+        return `${base}${project.cta ? '\n\n' + project.cta : ''}\n\n#CulturaEm1Minuto #Cultura #Audiovisual`;
+      }
+      function showProject() {
+        $('emptyState').style.display = 'none';
+        $('output').style.display = 'block';
+        $('projectSummary').innerHTML = [
+          project.platform, `${project.duration}s`, project.style, project.goal, '9:16 · 1080×1920'
+        ].map(t => `<span class="tag">${esc(t)}</span>`).join('');
+        $('captionText').textContent = caption();
+        renderScenes();
+      }
+      $('briefForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        project = getFormData();
+        scenes = makeScenes(project);
+        showProject();
+        notify('Estrutura inicial criada. Revise e edite cada cena.');
+      });
+      $('addSceneBtn').addEventListener('click', () => {
+        scenes.push({
+          id: `scene-${Date.now()}`, title: 'Nova cena', role: 'Definir função narrativa',
+          duration: 5, direction: 'Descreva a imagem, ação ou movimento desejado.',
+          screen: 'Insira o texto na tela.', voice: 'Insira a locução ou fala.',
+          mediaName: '', mediaUrl: '', mediaType: '', transition: 'Corte seco', notes: ''
+        });
+        renderScenes();
+      });
+      function exportData() {
+        if (!project) project = getFormData();
+        return {
+          application: 'C1M Studio IA',
+          version: '0.1.0-prototype',
+          project,
+          media: media.map(({name,type,size}) => ({name,type,size})),
+          scenes: scenes.map(({mediaUrl, ...scene}) => scene),
+          note: 'Protótipo de roteiro. Arquivos de mídia não são incorporados ao JSON. A renderização MP4 requer motor de edição integrado.'
+        };
+      }
+      function download(filename, content, type) {
+        const blob = new Blob([content], {type});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+      function exportJson() {
+        const data = exportData();
+        download(`${(data.project.title || 'c1m-projeto').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}.json`, JSON.stringify(data, null, 2), 'application/json;charset=utf-8');
+        notify('Projeto JSON exportado.');
+      }
+      $('exportJsonBtn').addEventListener('click', exportJson);
+      $('exportProjectBtn').addEventListener('click', exportJson);
+      $('downloadBriefBtn').addEventListener('click', () => {
+        if (!project) return;
+        const text = [
+          `C1M STUDIO IA — ${project.title}`,
+          `Plataforma: ${project.platform}`,
+          `Objetivo: ${project.goal}`,
+          `Duração pretendida: ${project.duration} segundos`,
+          `Estética: ${project.style}`,
+          `Áudio: ${project.audio}`,
+          `Marca: ${project.brand}`,
+          '', 'BRIEFING', project.briefing, '', 'ROTEIRO POR CENAS',
+          ...scenes.flatMap((s,i) => [
+            '', `CENA ${i+1} — ${s.title} (${s.duration}s)`,
+            `Função: ${s.role}`, `Mídia: ${s.mediaName || 'Pendente'}`,
+            `Direção visual: ${s.direction}`, `Texto na tela: ${s.screen}`,
+            `Locução: ${s.voice}`, `Transição: ${s.transition}`
+          ]),
+          '', 'LEGENDA SUGERIDA', caption(),
+          '', 'Observação: roteiro de produção; vídeo final não foi renderizado.'
+        ].join('\n');
+        download('roteiro-c1m-studio.txt', text, 'text/plain;charset=utf-8');
+      });
+      $('copyCaptionBtn').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(caption());
+          notify('Legenda copiada.');
+        } catch (_) { notify('Não foi possível copiar automaticamente neste navegador.'); }
+      });
+      $('saveDraftBtn').addEventListener('click', () => {
+        const data = exportData();
+        download('rascunho-c1m-studio.json', JSON.stringify(data, null, 2), 'application/json;charset=utf-8');
+        notify('Rascunho baixado para seu dispositivo.');
+      });
+      $('resetBtn').addEventListener('click', () => {
+        if (!confirm('Começar um novo projeto? Exporte o projeto atual antes, se quiser guardá-lo.')) return;
+        media.forEach(m => URL.revokeObjectURL(m.url));
+        media = []; scenes = []; project = null;
+        $('briefForm').reset(); $('brand').value = 'Cultura em 1 Minuto';
+        $('mediaList').innerHTML = ''; $('output').style.display = 'none'; $('emptyState').style.display = 'grid';
+        $('sceneList').innerHTML = ''; $('timelineTrack').innerHTML = ''; $('sceneCount').textContent = '0 cenas';
+      });
+      $('focusBriefBtn').addEventListener('click', () => $('projectTitle').focus());
+    })();
+  </script>
+</body>
+</html>
